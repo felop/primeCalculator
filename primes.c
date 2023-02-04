@@ -55,7 +55,6 @@ int scanTab(Tab *tab, long nb)
 int main(int argc, char *argv[])
 {
     Tab *primes = init(2);
-    long nb = 2;
 
     for (long i=3; i<500000; i+=2)
     {
@@ -70,10 +69,10 @@ int main(int argc, char *argv[])
     Element *currentElement = primes->first;
     while (currentElement->next != NULL)
     {
-        fprintf(file,"%d;",currentElement->number);
+        fprintf(file,"%li;",currentElement->number);
         currentElement = currentElement->next;
     }
-    fprintf(file,"%d",currentElement->number);
+    fprintf(file,"%li",currentElement->number);
     fclose(file);
     return 0;
 }
