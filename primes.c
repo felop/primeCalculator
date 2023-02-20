@@ -1,7 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
-unsigned sqrt(unsigned val) {
+unsigned approxSqrt(unsigned val) {
     unsigned a = val, valDigits = 0;
     do{
         valDigits++;
@@ -40,24 +41,10 @@ Tab *init(long nb)
     return tab;
 }
 
-void insertTab(Tab *tab, long nb)
-{
-    Element *currentAddress = tab->first;
-    while (currentAddress->next != NULL) {
-        currentAddress = currentAddress->next;
-    }
-    Element *newElement = malloc(sizeof(Element));
-    if (newElement == NULL)
-        exit(EXIT_FAILURE);
-    newElement->number = nb;
-    newElement->next = NULL;
-    currentAddress->next = newElement;
-}
-
 int scanTab(Tab *tab, long nb)
 {
     Element *currentElement = tab->first;
-    long squareRoot = sqrt(nb);
+    long squareRoot = approxSqrt(nb);
     for (long i=1; i<squareRoot; i++)
     {
         if (nb%currentElement->number == 0) {
@@ -71,14 +58,18 @@ int scanTab(Tab *tab, long nb)
 int main(int argc, char *argv[])
 {
     Tab *primes = init(2);
-    for (long i=3; i<500000; i++)
+    Element *lastElement = primes->first;
+    for (long i=3; i<2000000; i+=2)
     {
         if (scanTab(primes, i) == 1)
         {
-            insertTab(primes, i);
+            Element *newElement = malloc(sizeof(Element));
+            newElement->number = i;
+            newElement->next = NULL;
+            lastElement->next = newElement;
+            lastElement = lastElement->next;
         }
     }
-
     FILE *file = NULL;
     file = fopen("primes.txt","w");
     Element *currentElement = primes->first;
