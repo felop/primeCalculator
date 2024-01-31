@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <time.h>
 
 unsigned approxSqrt(unsigned val) {
     unsigned a = val, valDigits = 0;
@@ -57,9 +58,11 @@ int scanTab(Tab *tab, long nb)
 
 int main(int argc, char *argv[])
 {
+    clock_t begin_calc = clock();
+
     Tab *primes = init(2);
     Element *lastElement = primes->first;
-    for (long i=3; i<2000000; i+=2)
+    for (long i=3; i<1000000; i+=2)
     {
         if (scanTab(primes, i) == 1)
         {
@@ -70,8 +73,12 @@ int main(int argc, char *argv[])
             lastElement = lastElement->next;
         }
     }
+
+    clock_t end_calc = clock();
+    clock_t begin_save = clock();
+
     FILE *file = NULL;
-    file = fopen("primes.txt","w");
+    file = fopen("/Users/floux/Desktop/code/C/primes/primes.txt","w");
     Element *currentElement = primes->first;
     while (currentElement->next != NULL)
     {
@@ -80,5 +87,12 @@ int main(int argc, char *argv[])
     }
     fprintf(file,"%li",currentElement->number);
     fclose(file);
+
+    clock_t end_save = clock();
+    double time_calc = (double)(end_calc - begin_calc) / CLOCKS_PER_SEC;
+    double time_save = (double)(end_save - begin_save) / CLOCKS_PER_SEC;
+    printf("time (calculating) : %.2f\n", time_calc);
+    printf("time (saving) : %.2f\n", time_save);
+
     return 0;
 }
